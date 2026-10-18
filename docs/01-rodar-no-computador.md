@@ -2,8 +2,11 @@
 
 Vamos usar o **Local**, um programa gratuito que cria um WordPress completo (com banco de dados) no seu computador. Nada vai para a internet ainda.
 
-Antes de começar, baixe os dois arquivos de instalação na página de versões do repositório:
-<https://github.com/gustavotoigo-max/site-lorie/releases> → `lorie-core.zip` (plugin) e `lorie-tema.zip` (tema).
+Antes de começar, tenha à mão os dois pacotes de instalação, que ficam na pasta [`instalar/`](../instalar) do repositório (abra cada arquivo no GitHub e clique em **Download raw file**):
+- `lorie-core.zip` — o plugin
+- `lorie-tema.zip` — o tema
+
+> Não descompacte: o WordPress recebe o .zip direto. (Para gerar de novo depois de alterar o código: `scripts/gerar-zips.sh`.)
 
 ---
 

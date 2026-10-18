@@ -25,6 +25,7 @@ wp-content/database/
 # --- Pacotes gerados (ficam nas Releases do GitHub) ---
 dist/
 *.zip
+!instalar/*.zip
 
 # --- Ferramentas ---
 node_modules/

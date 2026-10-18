@@ -51,6 +51,7 @@ wp-content/
   themes/lorie/            tema (visual)
   plugins/lorie-core/      plugin (regras da loja e painel)
 docs/                      guias passo a passo
+instalar/                  lorie-core.zip e lorie-tema.zip (para enviar pelo painel do WordPress)
 docker-compose.yml         alternativa ao Local (para quem usa Docker)
 .env.example               modelo de variáveis do Docker (copie para .env)
 ```
