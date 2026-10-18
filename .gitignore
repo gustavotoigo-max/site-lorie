@@ -1,0 +1,35 @@
+# --- Segredos e configurações locais (NUNCA versionar) ---
+.env
+*.env
+!.env.example
+wp-config.php
+wp-config-local.php
+auth.json
+*.pem
+*.key
+
+# --- Dados e arquivos gerados pelo WordPress ---
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/backup*/
+wp-content/updraft/
+wp-content/ai1wm-backups/
+wp-content/debug.log
+wp-content/database/
+*.sql
+*.sql.gz
+*.sqlite
+*.log
+
+# --- Pacotes gerados (ficam nas Releases do GitHub) ---
+dist/
+*.zip
+
+# --- Ferramentas ---
+node_modules/
+vendor/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

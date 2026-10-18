@@ -1,0 +1,51 @@
+# Alternativa ao programa "Local" para quem já usa Docker.
+#   1) cp .env.example .env   (e troque as senhas)
+#   2) docker compose up -d
+#   3) abra http://localhost:8080 e instale o WordPress; e-mails em http://localhost:8025
+#   4) Plugins: instale WooCommerce, ative "Lorié — Núcleo da Loja"; Aparência › Temas: ative "Lorié"
+#   5) Lorié › Assistente › Configurar loja agora
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    restart: unless-stopped
+    depends_on: [db]
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG', false );
+        define( 'WPLANG', 'pt_BR' );
+        // Envia os e-mails para o Mailpit (caixa de teste em http://localhost:8025)
+        if ( ! function_exists( 'lorie_local_mail' ) ) {
+          function lorie_local_mail( $phpmailer ) { $phpmailer->isSMTP(); $phpmailer->Host = 'mailpit'; $phpmailer->Port = 1025; $phpmailer->SMTPAuth = false; }
+          add_action( 'phpmailer_init', 'lorie_local_mail' );
+        }
+    volumes:
+      - wp:/var/www/html
+      - ./wp-content/themes/lorie:/var/www/html/wp-content/themes/lorie
+      - ./wp-content/plugins/lorie-core:/var/www/html/wp-content/plugins/lorie-core
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
+volumes:
+  db:
+  wp:
