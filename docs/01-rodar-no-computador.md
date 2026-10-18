@@ -25,7 +25,7 @@ Se aparecer o assistente do WooCommerce, pode fechar/pular — o nosso assistent
 **Plugins › Adicionar novo › Enviar plugin** › escolha `lorie-core.zip` › **Instalar agora** › **Ativar plugin**.
 
 ### Passo 5 — Instalar o tema da Lorié
-**Aparência › Temas › Adicionar novo tema › Enviar tema** › escolha `lorie-tema.zip` › **Instalar agora** › **Ativar**.
+**Aparência › Temas › Adicionar novo tema › Enviar tema** › escolha `lorie-tema.zip` › **Instalar agora** › clique em **Ativar** na tela seguinte (sem isso o site continua com o visual padrão do WordPress, o "Twenty Twenty-Five").
 
 ### Passo 6 — Configurar a loja com um clique
 No menu lateral, clique em **Lorié › Assistente** › deixe marcado "Incluir peças, slides e fotos de exemplo" › **Configurar loja agora** (leva cerca de 1 minuto).
@@ -34,6 +34,8 @@ Depois clique em **Ver loja ↗** e faça uma compra de teste: escolha uma peça
 ---
 
 ✅ Pronto! A loja está rodando. Próximo guia: [2 · Deixar a loja com a cara da Lorié](02-personalizar-a-loja.md).
+
+**Se o site aparecer "estranho"** (menu com Cart, Checkout, Sample Page e rodapé "Twenty Twenty-Five"): o tema Lorié não está ativo. Vá em **Aparência › Temas** e clique em **Ativar** no Lorié — ou rode **Lorié › Assistente** de novo, que ele ativa o tema e limpa as páginas duplicadas.
 
 **Dicas**
 - Os e-mails (ex.: link de acesso da cliente) não saem do computador: no Local, abra a aba **Tools › Mailpit** para vê-los.

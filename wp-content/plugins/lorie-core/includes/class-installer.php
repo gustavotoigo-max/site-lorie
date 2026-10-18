@@ -26,6 +26,13 @@ class Lorie_Installer {
 	}
 
 	public static function notice() {
+		if ( current_user_can( 'switch_themes' ) && 'lorie' !== get_stylesheet() ) {
+			$installed = wp_get_theme( 'lorie' )->exists();
+			$url       = $installed
+				? wp_nonce_url( admin_url( 'themes.php?action=activate&stylesheet=lorie' ), 'switch-theme_lorie' )
+				: admin_url( 'theme-install.php?upload' );
+			echo '<div class="notice notice-error"><p><strong>Lorié:</strong> o tema da loja não está ativo — o site está com o visual padrão do WordPress. <a class="button button-primary" href="' . esc_url( $url ) . '">' . ( $installed ? 'Ativar o tema Lorié' : 'Enviar o tema (lorie-tema.zip)' ) . '</a></p></div>';
+		}
 		if ( get_option( 'lorie_setup_done' ) || ! current_user_can( 'manage_options' ) || Lorie_Admin::is_lorie_screen() ) {
 			return;
 		}
@@ -91,6 +98,8 @@ class Lorie_Installer {
 		wp_raise_memory_limit( 'admin' );
 		$log = array();
 
+		$log[] = self::activate_theme();
+
 		self::options();
 		$log[] = 'Opções do WooCommerce ajustadas para o Brasil';
 
@@ -102,6 +111,11 @@ class Lorie_Installer {
 
 		$pages = self::pages();
 		$log[] = 'Páginas criadas';
+
+		$removed = self::cleanup_duplicates( $pages );
+		if ( $removed ) {
+			$log[] = "Páginas duplicadas/de exemplo movidas para a lixeira: {$removed}";
+		}
 
 		self::shipping();
 		$log[] = 'Frete configurado';
@@ -257,6 +271,38 @@ class Lorie_Installer {
 			update_post_meta( $id, '_wp_page_template', $template );
 		}
 		return (int) $id;
+	}
+
+	/** Ativa o tema Lorié se ele estiver instalado. */
+	private static function activate_theme() {
+		if ( 'lorie' === get_stylesheet() ) {
+			return 'Tema Lorié ativo';
+		}
+		if ( wp_get_theme( 'lorie' )->exists() ) {
+			switch_theme( 'lorie' );
+			return 'Tema Lorié ativado';
+		}
+		return 'ATENÇÃO: o tema Lorié não está instalado — envie o lorie-tema.zip em Aparência › Temas e rode o assistente de novo';
+	}
+
+	/** Remove (lixeira) as páginas automáticas do WooCommerce/WordPress que ficaram duplicadas. */
+	private static function cleanup_duplicates( $pages ) {
+		$keep = array_map( 'intval', array_values( $pages ) );
+		$n    = 0;
+		foreach ( array( 'cart', 'checkout', 'my-account', 'shop', 'sample-page', 'refund_returns', 'privacy-policy' ) as $slug ) {
+			$found = get_posts( array( 'post_type' => 'page', 'name' => $slug, 'post_status' => array( 'publish', 'draft', 'private' ), 'numberposts' => 5 ) );
+			foreach ( $found as $p ) {
+				if ( ! in_array( (int) $p->ID, $keep, true ) ) {
+					wp_trash_post( $p->ID );
+					$n++;
+				}
+			}
+		}
+		$hello = get_posts( array( 'post_type' => 'post', 'name' => 'hello-world', 'numberposts' => 1 ) );
+		if ( $hello ) {
+			wp_trash_post( $hello[0]->ID );
+		}
+		return $n;
 	}
 
 	private static function pages() {
